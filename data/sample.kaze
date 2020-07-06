@@ -1,0 +1,47 @@
+entity Mob 
+{
+	constructor()
+	{
+		this.x : uint8  = 0;
+		this.y : uint8  = 0;
+		this.z : uint16 = this.x + this.z;
+	}
+
+	method_1(x : uint16)
+	{
+		x : uint16 = this.x + (this.z + 2);
+		y : uint16 = this.x + (this.z * (1 + this.y));
+		z : uint16 = (this.z + 2) + 3;
+
+		callback(z, (e : uint8) => {
+		    # Note, x here is a copy
+			e.xxx = x; 
+
+			# Callbacks are always sync, thus it is safe to use 
+			this.x = e.yyy;
+		});
+
+		# Sync access to other entities
+		with(
+			id1, id2, id3,
+			(e1 : entity, e2 : entity, e3 : entity) =>
+			{
+				
+			}
+		);
+		
+		return 9;
+	}
+
+	f(x : uint16, y : uint8)
+	{
+		z : uint16 = this.method_1(x) + 2;
+		return x + y;
+	}
+
+	g(x : bool, y : double, z : float)
+	{
+		w : list = [1, 2, y, 9];
+		return x * (y + z);
+	}
+}
