@@ -45,6 +45,14 @@ lg.add('COLON',     r':')
 lg.add('LPAREN',    r'\(')
 lg.add('RPAREN',    r'\)')
 
+# Conditions
+lg.add('GREATER',   r'>')
+lg.add('GEQ',       r'>=')
+lg.add('LESS',      r'<')
+lg.add('LEQ',       r'<=')
+lg.add('EQUAL',     r'==')
+lg.add('DIFF',      r'!=')
+
 # Variables and instructions
 lg.add('SEMICOLON', r';')
 lg.add('ASSIGN',    r'=')

@@ -65,9 +65,10 @@ class ParensExpr(UnaryExpr):
     pass
     
 class BinaryExpr(BaseBox):
-    def __init__(self, left, right):
+    def __init__(self, left, right, op):
         self.left = left
         self.right = right
+        self.op = op
 
 class Assignment(BaseBox):
     def __init__(self, var, expr):
@@ -88,3 +89,18 @@ class Call(BaseBox):
 class List(BaseBox):
     def __init__(self, elements):
         self.elements = elements
+
+class If(EntityBody):
+    def __init__(self, condition, body, branches):
+        super().__init__(body)
+        self.condition = condition
+        self.branches = branches
+
+class ElseIf(If):
+    pass
+
+class Else(EntityBody):
+    pass
+
+class Terminus(BaseBox):
+    pass

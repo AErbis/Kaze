@@ -25,6 +25,14 @@ pg = ParserGenerator([
     "BOOL",
     "FLOAT",
     "DOUBLE",
+    "IF",
+    "ELSE",
+    "GREATER",
+    "GEQ",
+    "LESS", 
+    "LEQ",
+    "EQUAL",
+    "DIFF",
     "LIST",
     "DIC",
     "ADD",
@@ -38,10 +46,12 @@ pg = ParserGenerator([
     "RETURN"
 ], precedence=[
     ("left", ['ASSIGN']),
+    ("left", ['IF', 'ELSE']),
     ("left", ['ADD', 'SUB']),
     ("left", ['MUL', 'DIV']),
     ("right", ['LPAREN']),
-    ("left", ['RPAREN'])
+    ("left", ['RPAREN']),
+    ("left", ['GREATER', 'GEQ', 'LESS', 'LEQ', 'EQUAL', 'DIFF'])
 ], cache_id="kaze")
 
 @pg.production("entity : ENTITY IDENTIFIER LBRACE entity_body RBRACE")
@@ -101,8 +111,24 @@ def assign(p):
     return UnaryExpr(p[1])
 
 @pg.production("instruction : expression SEMICOLON")
-def instruction(p):
+def intsr_expr(p):
     return Instruction(p[0])
+
+@pg.production("instruction : IF LPAREN expression RPAREN LBRACE method_body RBRACE else_if_clausule")
+def instr_if(p):
+    return If(p[2], p[5], p[7])
+
+@pg.production("else_if_clausule : ELSE IF LPAREN expression RPAREN LBRACE method_body RBRACE else_if_clausule")
+def else_if_clausule(p):
+    return ElseIf(p[3], p[6], p[8])
+
+@pg.production("else_if_clausule : ELSE LBRACE method_body RBRACE")
+def else_if_clausule_else(p):
+    return Else(p[2])
+
+@pg.production("else_if_clausule : ")
+def else_if_clausule_none(p):
+    return Terminus()
 
 @pg.production("expression : attr")
 @pg.production("expression : NUMBER")
@@ -117,8 +143,14 @@ def expression_parens(p):
 @pg.production("expression : expression SUB expression")
 @pg.production("expression : expression DIV expression")
 @pg.production("expression : expression MUL expression")
+@pg.production("expression : expression GREATER expression")
+@pg.production("expression : expression GEQ expression")
+@pg.production("expression : expression LESS expression")
+@pg.production("expression : expression LEQ expression")
+@pg.production("expression : expression EQUAL expression")
+@pg.production("expression : expression DIFF expression")
 def expression_math(p):
-    return BinaryExpr(p[0], p[2])
+    return BinaryExpr(p[0], p[2], p[1].value)
 
 @pg.production("expression : attr LPAREN parameters RPAREN")
 def expression_call(p):

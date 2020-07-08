@@ -35,6 +35,25 @@ entity Mob
 
 	f(x : uint16, y : uint8)
 	{
+		if (x < y)
+		{
+			5 + 2 == 2;
+			
+			if (5 + 2 == 2)
+			{
+				return 4;
+			}
+			return x;
+		}
+		else if (1 == 2) 
+		{
+			return y;
+		}
+		else
+		{
+			return 0;
+		}
+
 		z : uint16 = this.method_1(x) + 2;
 		return x + y;
 	}
